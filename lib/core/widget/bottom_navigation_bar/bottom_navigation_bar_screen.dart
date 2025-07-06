@@ -21,6 +21,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
       Routes.bottomNavigationRoutes(1),
       Routes.bottomNavigationRoutes(2),
       Routes.bottomNavigationRoutes(3),
+      Routes.bottomNavigationRoutes(4),
     ];
 
     print("Build Bottom Navigation Bar");
@@ -44,6 +45,14 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
           BottomNavigationBarItem(
             icon: Icon(currentIndex == 0 ? Icons.home : Icons.home_outlined),
             label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(currentIndex == 2 ? Icons.water_drop : Icons.water_drop_outlined),
+            label: "Water",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(currentIndex == 2 ? Icons.water_drop : Icons.water_drop_outlined),
+            label: "Workout",
           ),
           BottomNavigationBarItem(
             icon: Icon(currentIndex == 2 ? Icons.message : Icons.message_outlined),

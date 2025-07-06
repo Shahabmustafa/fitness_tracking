@@ -35,7 +35,7 @@ class AppButton extends StatelessWidget {
           border: Constant.border,
         ),
         child: loading ?
-        const Center(child: CircularProgressIndicator(color: AppColor.white,)) :
+        const Center(child: SizedBox(height: 25,width: 25,child: CircularProgressIndicator(color: AppColor.white,))) :
         Center(
           child: Text(
             text,

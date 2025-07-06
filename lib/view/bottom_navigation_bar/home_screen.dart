@@ -1,7 +1,11 @@
 import 'package:fitness_tracking/core/exports.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pedometer/pedometer.dart';
 
-class HomeScreen extends StatelessWidget {
+import '../../controller/steps/steps_controller.dart';
+
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   List<BarChartGroupData> _buildStepBars() {
@@ -28,8 +32,15 @@ class HomeScreen extends StatelessWidget {
     });
   }
 
+
+  String formatDuration(Duration d) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    return "${twoDigits(d.inHours)}:${twoDigits(d.inMinutes % 60)}:${twoDigits(d.inSeconds % 60)}";
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+    final stepData = ref.watch(stepsProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -109,7 +120,7 @@ class HomeScreen extends StatelessWidget {
                 spacing: 5,
                 children: [
                   Text("Step Count",style: Theme.of(context).textTheme.labelSmall,),
-                  Text("1000", style: Theme.of(context).textTheme.labelLarge,),
+                  Text(stepData.steps.toString(), style: Theme.of(context).textTheme.labelLarge,),
                   Text("Goal: Steps",style: Theme.of(context).textTheme.labelSmall,),
                   AppButton(
                     text: "Change goal",
@@ -205,7 +216,7 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       Icon(Icons.history, size: 30, color: AppColor.primaryColor.withOpacity(0.5)),
                       SizedBox(height: 10,),
-                      Text("16 M 7 s",
+                      Text(formatDuration(stepData.duration),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Text("Duration",
@@ -217,7 +228,7 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       Icon(Icons.location_on_outlined, size: 30, color: AppColor.primaryColor.withOpacity(0.5)),
                       SizedBox(height: 10,),
-                      Text("1 KM",
+                      Text(stepData.calories.toStringAsFixed(2),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Text("Duration",
@@ -229,7 +240,7 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       Icon(Icons.water_drop_outlined, size: 30, color: AppColor.primaryColor.withOpacity(0.5)),
                       SizedBox(height: 10,),
-                      Text("83 KCAL",
+                      Text(stepData.calories.toStringAsFixed(2),
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Text("Calories",

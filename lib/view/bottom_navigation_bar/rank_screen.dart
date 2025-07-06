@@ -11,10 +11,12 @@ class RankScreen extends StatelessWidget {
         children: [
           Expanded(
             child: ListView.builder(
+              itemCount: 20,
               itemBuilder: (context,index){
                 return Card(
                   child: ListTile(
                     title: Text("Shahab Mustafa"),
+                    trailing: Text("1800",style: Theme.of(context).textTheme.titleMedium,),
                   ),
                 );
               },

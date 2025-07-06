@@ -1,7 +1,15 @@
-import 'package:fitness_tracking/core/exports.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../controller/authentication/auhentication_controller.dart';
+import '../../core/exports.dart';
+
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
+
+  final email = TextEditingController();
+  final password = TextEditingController();
+  final _key = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -14,16 +22,47 @@ class LoginScreen extends StatelessWidget {
           children: [
             Text("Login your account",style: Theme.of(context).textTheme.titleLarge,),
             Form(
+              key: _key,
               child: Column(
                 spacing: 10,
                 children: [
                   AppTextFormField(
                     hintText: "Email",
+                    controller: email,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter your email";
+                      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                        return "Please enter a valid email address";
+                      }
+                      return null;
+                    },
                   ),
-                  AppTextFormField(
-                    hintText: "Password",
-                    obscureText: true,
-                    suffixIcon: Icon(Icons.visibility_off_outlined),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final visible = ref.watch(loginPasswordVisible);
+                      return AppTextFormField(
+                        hintText: "Password",
+                        obscureText: !visible,
+                        controller: password,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter your password";
+                          } else if (value.length < 6) {
+                            return "Password must be at least 6 characters";
+                          }
+                          return null;
+                        },
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            visible ? Icons.visibility : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            ref.read(loginPasswordVisible.notifier).state = !ref.read(loginPasswordVisible);
+                          },
+                        ),
+                      );
+                    },
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -36,10 +75,19 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  AppButton(
-                    text: "Login",
-                    onTap: (){
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavigationBarScreen()));
+                  Consumer(
+                    builder: (context,ref,_){
+                      final authController = ref.watch(loginProvider.notifier);
+                      final isLoading = ref.watch(loginProvider);
+                      return AppButton(
+                        text: "Login",
+                        loading: isLoading,
+                        onTap: (){
+                          if (_key.currentState!.validate()) {
+                            authController.login(context,email.text, password.text);
+                          }
+                        },
+                      );
                     },
                   ),
                 ],

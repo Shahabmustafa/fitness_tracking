@@ -12,4 +12,6 @@ export 'package:fitness_tracking/view/splash/splash_screen.dart';
 export 'package:fitness_tracking/core/theme/light_theme.dart';
 export 'package:fitness_tracking/view/authentication/signup_screen.dart';
 export '../../core/widget/bottom_navigation_bar/bottom_navigation_bar_screen.dart';
+export 'package:supabase_flutter/supabase_flutter.dart';
 
+export '../core/routes/routes.dart';

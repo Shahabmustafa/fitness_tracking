@@ -1,7 +1,18 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/exports.dart';
+import 'core/routes/routes.dart';
 
-void main() {
-  runApp(const MyApp());
+void main()async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load(fileName: ".env");
+
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_KEY']!,
+  );
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -13,7 +24,8 @@ class MyApp extends StatelessWidget {
       title: 'Fitness Tracking',
       debugShowCheckedModeBanner: false,
       theme: LightTheme.lightTheme,
-      home: SplashScreen(),
+      initialRoute: Routes.splash,
+      onGenerateRoute: Routes.onGenerateRoute,
     );
   }
 }
